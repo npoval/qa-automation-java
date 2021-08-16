@@ -9,7 +9,7 @@ public class LoanCalcTest {
     public static void main(String... args) {
         int requestId = LoanCalcController.createRequest();
         System.out.println("Если requestId = 1, test passed:");
-        System.out.println(" requstId = "+ requestId);
+        System.out.println(" requestId = " + requestId);
     }
 }
 
