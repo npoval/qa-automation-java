@@ -1,4 +1,6 @@
-package com.tinkoff.edu.app;
+package com.tinkoff.edu.app.service;
+
+import com.tinkoff.edu.app.repository.LoanCalcRepository;
 
 public class LoanCalcService {
     /**
