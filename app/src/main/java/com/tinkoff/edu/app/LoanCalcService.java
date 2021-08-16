@@ -6,7 +6,6 @@ public class LoanCalcService {
      */
     public static int createRequest() {
         return LoanCalcRepository.save();
-
     }
 }
 
