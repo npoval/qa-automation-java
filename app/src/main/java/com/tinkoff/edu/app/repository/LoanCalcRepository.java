@@ -1,5 +1,7 @@
 package com.tinkoff.edu.app.repository;
 
+import com.tinkoff.edu.app.request.LoanRequest;
+
 public class LoanCalcRepository {
     private static int requestId;
 
@@ -8,7 +10,7 @@ public class LoanCalcRepository {
      *
      * @return Request Id
      */
-    public static int save() {
+    public int save(LoanRequest request) {
         return ++requestId;
     }
 }
