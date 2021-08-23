@@ -2,19 +2,25 @@ package com.tinkoff.edu.app.controller;
 
 
 import com.tinkoff.edu.app.request.LoanRequest;
-import com.tinkoff.edu.app.logger.LoanCalcLogger;
-import com.tinkoff.edu.app.service.LoanCalcService;
+import com.tinkoff.edu.app.service.BusinessService;
 
 public class LoanCalcController {
+    private BusinessService service;
+
+
+    public LoanCalcController(BusinessService service) {
+        this.service = service;
+    }
+
     /**
      * TODO Validates and logs request
      */
     public int createRequest(LoanRequest request) {
-        LoanCalcService service = new LoanCalcService();
+
 
         //param validation
         //log request
-        LoanCalcLogger.log(request);
+        //LoanCalcLogger.log(request);
         return service.createRequest(request);
     }
 }

@@ -1,14 +1,19 @@
 package com.tinkoff.edu.app.service;
 
-import com.tinkoff.edu.app.request.LoanRequest;
 import com.tinkoff.edu.app.repository.LoanCalcRepository;
+import com.tinkoff.edu.app.request.LoanRequest;
 
-public class LoanCalcService {
+public class LoanCalcService implements BusinessService {
+    private LoanCalcRepository repository;
+
+    public LoanCalcService(LoanCalcRepository repository) {
+        this.repository = repository;
+    }
+
     /**
      * TODO Loan calculation
      */
     public int createRequest(LoanRequest request) {
-        LoanCalcRepository repository = new LoanCalcRepository();
         return repository.save(request);
     }
 }
