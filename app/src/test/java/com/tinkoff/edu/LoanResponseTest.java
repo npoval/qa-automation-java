@@ -13,7 +13,7 @@ public class LoanResponseTest {
 
     @Test
     @DisplayName("Проверка инкремента responseId")
-    public void GetResponseIdAnyCall() {
+    public void getResponseIdAnyCall() {
         for (int i = 1; i < 5; i++) {
             response = new LoanResponse(ResponseType.APPROVED);
             assertEquals(i, response.getResponseId());
