@@ -1,11 +1,10 @@
 package com.tinkoff.edu;
 
+import com.tinkoff.edu.app.controller.LoanCalcController;
 import com.tinkoff.edu.app.repository.StaticVariableLoanCalcRepository;
 import com.tinkoff.edu.app.request.LoanRequest;
 import com.tinkoff.edu.app.request.LoanType;
-import com.tinkoff.edu.app.controller.LoanCalcController;
-
-import com.tinkoff.edu.app.service.IpNotFriendlyService;
+import com.tinkoff.edu.app.service.LoanCalcService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,20 +21,23 @@ public class LoanCalcTest {
     @BeforeEach
     public void init() {
         request = new LoanRequest(LoanType.OOO, 10, 1000);
-        sut = new LoanCalcController(new IpNotFriendlyService(new StaticVariableLoanCalcRepository()));
+        sut = new LoanCalcController(new LoanCalcService(new StaticVariableLoanCalcRepository()));
+        StaticVariableLoanCalcRepository.setRequestId(0);
     }
 
     @Test
     @DisplayName("Проверка идентификатора requestId, если тип заявки не IP и статик репо")
-    public void shouldGet1WnenNotIpRequest() {
+    public void shouldGet1WhenNotIpRequest() {
         int requestId = sut.createRequest(request);
         assertEquals(1, requestId);
     }
 
     @Test
-    public void shouldGetIncrementedIdWnenAnyCall() {
-        int defaultRequestId = StaticVariableLoanCalcRepository.getRequestId();
-        int requestId = sut.createRequest(request);
-        assertEquals(++defaultRequestId, requestId);
+    @DisplayName("Проверка инкремента идентификатора requestId при любом вызове, если тип заявки не IP и статик репо")
+    public void shouldGetIncrementedIdWhenAnyCall() {
+        for (int i = 1; i < 4; i++) {
+            int requestId = sut.createRequest(request);
+            assertEquals(i, requestId);
+        }
     }
 }
