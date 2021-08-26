@@ -16,19 +16,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class LoanCalcTest {
     private LoanRequest request;
-    private LoanCalcController sut;
+    private LoanCalcController controller;
 
     @BeforeEach
     public void init() {
         request = new LoanRequest(LoanType.OOO, 10, 1000);
-        sut = new LoanCalcController(new LoanCalcService(new StaticVariableLoanCalcRepository()));
+        controller = new LoanCalcController(new LoanCalcService(new StaticVariableLoanCalcRepository()));
         StaticVariableLoanCalcRepository.setRequestId(0);
     }
 
     @Test
     @DisplayName("Проверка идентификатора requestId, если тип заявки не IP и статик репо")
     public void shouldGet1WhenNotIpRequest() {
-        int requestId = sut.createRequest(request);
+        int requestId = controller.createRequest(request);
         assertEquals(1, requestId);
     }
 
@@ -36,7 +36,7 @@ public class LoanCalcTest {
     @DisplayName("Проверка инкремента идентификатора requestId при любом вызове, если тип заявки не IP и статик репо")
     public void shouldGetIncrementedIdWhenAnyCall() {
         for (int i = 1; i < 4; i++) {
-            int requestId = sut.createRequest(request);
+            int requestId = controller.createRequest(request);
             assertEquals(i, requestId);
         }
     }
