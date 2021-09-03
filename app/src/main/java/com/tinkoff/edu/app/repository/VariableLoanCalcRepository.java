@@ -2,9 +2,10 @@ package com.tinkoff.edu.app.repository;
 
 import com.tinkoff.edu.app.request.LoanRequest;
 
+import java.util.UUID;
+
 public class VariableLoanCalcRepository implements LoanCalcRepository {
     private int requestId;
-
     public VariableLoanCalcRepository(int requestId) {
         this.requestId = requestId;
     }
@@ -19,9 +20,9 @@ public class VariableLoanCalcRepository implements LoanCalcRepository {
      *
      * @return Request Id
      */
-    @Override
-    public int save(LoanRequest request) {
-        return ++requestId;
+
+    public UUID save(LoanRequest request) {
+        return UUID.randomUUID();
     }
 }
 

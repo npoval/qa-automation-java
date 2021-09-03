@@ -33,10 +33,10 @@ public class LoanCalcController {
                 case IP:
                     return new LoanResponse(ResponseType.DENIED, service.createRequest(request));
                 default:
-                    return new LoanResponse(ResponseType.ERROR, -1);
+                    return new LoanResponse(ResponseType.ERROR, service.createRequest(request));
             }
         } else {
-            return new LoanResponse(ResponseType.ERROR, -1);
+            return new LoanResponse(ResponseType.ERROR, service.createRequest(request));
         }
     }
 }

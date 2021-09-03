@@ -1,40 +1,31 @@
 package com.tinkoff.edu.app.response;
 
-import java.util.Objects;
+import java.util.UUID;
 
 /**
  * TODO добавить использование объекта LoanResponse
  */
 
 public class LoanResponse {
-    //private static int count = 0;
     private ResponseType responseType;
-    private  int responseId;
+    private UUID responseId;
 
-    public LoanResponse(ResponseType responseType, int responseId) {
+    public LoanResponse(ResponseType responseType, UUID responseId) {
         this.responseType = responseType;
         this.responseId = responseId;
     }
 
-
-    public ResponseType getResponse() {
+    public ResponseType getResponseType() {
         return responseType;
     }
 
-    public int getResponseId() {
+
+    public void setResponseType(ResponseType responseType) {
+        this.responseType = responseType;
+    }
+
+    public UUID getResponseId() {
         return responseId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LoanResponse response = (LoanResponse) o;
-        return getResponseId() == response.getResponseId() && responseType == response.responseType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(responseType, getResponseId());
-    }
 }

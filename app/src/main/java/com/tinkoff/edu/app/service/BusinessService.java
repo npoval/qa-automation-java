@@ -2,6 +2,8 @@ package com.tinkoff.edu.app.service;
 
 import com.tinkoff.edu.app.request.LoanRequest;
 
+import java.util.UUID;
+
 public interface BusinessService {
-    int createRequest(LoanRequest request);
+    UUID createRequest(LoanRequest request);
 }

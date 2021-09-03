@@ -2,6 +2,8 @@ package com.tinkoff.edu.app.repository;
 
 import com.tinkoff.edu.app.request.LoanRequest;
 
+import java.util.UUID;
+
 public interface LoanCalcRepository {
-    int save(LoanRequest request);
+    UUID save(LoanRequest request);
 }
