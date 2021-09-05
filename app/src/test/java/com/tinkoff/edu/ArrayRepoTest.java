@@ -1,6 +1,9 @@
 package com.tinkoff.edu;
 
+import com.tinkoff.edu.app.exception.AmountValidationException;
+import com.tinkoff.edu.app.exception.FioDataLengthException;
 import com.tinkoff.edu.app.controller.LoanCalcController;
+import com.tinkoff.edu.app.exception.MonthsDataValidationException;
 import com.tinkoff.edu.app.repository.ArrayLoanCalcRepository;
 import com.tinkoff.edu.app.request.LoanRequest;
 import com.tinkoff.edu.app.request.LoanType;
@@ -29,7 +32,7 @@ public class ArrayRepoTest {
 
     @Test
     @DisplayName("Проверка возможности получения статуса заявки по UUID ")
-    public void shouldGetLoanStatusByUuid() {
+    public void shouldGetLoanStatusByUuid() throws FioDataLengthException, MonthsDataValidationException, AmountValidationException {
         LoanResponse response = controller.createRequest(this.request);
         repository.writeResponse(response);
         System.out.println(response.getResponseId());
@@ -39,7 +42,7 @@ public class ArrayRepoTest {
 
     @Test
     @DisplayName("Проверка возможности установки статуса заявки по UUID с DENIED на APPROVED")
-    public void shouldSetLoanStatusByUuid() {
+    public void shouldSetLoanStatusByUuid() throws FioDataLengthException, MonthsDataValidationException, AmountValidationException {
         LoanResponse response = controller.createRequest(this.request);
         repository.writeResponse(response);
         repository.setStatus(response.getResponseId(), ResponseType.DENIED);

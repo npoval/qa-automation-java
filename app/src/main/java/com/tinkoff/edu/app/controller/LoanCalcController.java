@@ -1,6 +1,9 @@
 package com.tinkoff.edu.app.controller;
 
 
+import com.tinkoff.edu.app.exception.AmountValidationException;
+import com.tinkoff.edu.app.exception.FioDataLengthException;
+import com.tinkoff.edu.app.exception.MonthsDataValidationException;
 import com.tinkoff.edu.app.request.LoanRequest;
 import com.tinkoff.edu.app.response.LoanResponse;
 import com.tinkoff.edu.app.response.ResponseType;
@@ -15,8 +18,17 @@ public class LoanCalcController {
         this.service = service;
     }
 
-    public LoanResponse createRequest(LoanRequest request) {
-        if (request != null && request.getMonths() > 0 && request.getAmount() > 0) {
+    public LoanResponse createRequest(LoanRequest request) throws FioDataLengthException, MonthsDataValidationException, AmountValidationException {
+        if (request != null && request.getFio() != null) {
+            if (request.getFio().length() < 10 || request.getFio().length() > 100) {
+                throw new FioDataLengthException("Некорректная длина FIO!");
+            }
+            if (request.getMonths() <= 0 || request.getMonths() > 100) {
+                throw new MonthsDataValidationException("Некорректное значение месяца!");
+            }
+            if (request.getAmount() < 0.01 || request.getAmount() > 999999.99) {
+                throw new AmountValidationException("Некорректное значение суммы!");
+            }
             switch (request.getType()) {
                 case PERSON:
                     if (request.getAmount() <= 10000 && request.getMonths() <= 12) {
@@ -33,10 +45,10 @@ public class LoanCalcController {
                 case IP:
                     return new LoanResponse(ResponseType.DENIED, service.createRequest(request));
                 default:
-                    return new LoanResponse(ResponseType.ERROR, service.createRequest(request));
+                    throw new IllegalArgumentException("Некорректные данные!");
             }
         } else {
-            return new LoanResponse(ResponseType.ERROR, service.createRequest(request));
+            throw new NullPointerException("Пустые данные в запросе!");
         }
     }
 }
