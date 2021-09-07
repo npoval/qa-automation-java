@@ -1,10 +1,11 @@
 package com.tinkoff.edu;
 
+import com.tinkoff.edu.app.controller.LoanCalcController;
 import com.tinkoff.edu.app.exception.AmountValidationException;
 import com.tinkoff.edu.app.exception.FioDataLengthException;
-import com.tinkoff.edu.app.controller.LoanCalcController;
 import com.tinkoff.edu.app.exception.MonthsDataValidationException;
-import com.tinkoff.edu.app.repository.ArrayLoanCalcRepository;
+import com.tinkoff.edu.app.repository.LoanRequestResponse;
+import com.tinkoff.edu.app.repository.MapLoanCalcRepository;
 import com.tinkoff.edu.app.request.LoanRequest;
 import com.tinkoff.edu.app.request.LoanType;
 import com.tinkoff.edu.app.response.LoanResponse;
@@ -22,13 +23,11 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * Loan Calc Tests
- */
-public class LoanCalcTest {
+public class LoanCalcTestWithMapRepo {
     private LoanRequest request;
     private LoanCalcController controller;
-    private ArrayLoanCalcRepository repository;
+    private MapLoanCalcRepository repository;
+    private LoanRequestResponse loanRequestResponse;
 
     private static Stream<Arguments> provideValidRequestAndResponse() {
         return Stream.of(
@@ -45,7 +44,8 @@ public class LoanCalcTest {
 
     @BeforeEach
     public void init() {
-        repository = new ArrayLoanCalcRepository();
+        repository = new MapLoanCalcRepository();
+
     }
 
     @ParameterizedTest
@@ -55,7 +55,8 @@ public class LoanCalcTest {
         controller = new LoanCalcController(new LoanCalcService(repository));
         request = new LoanRequest(LoanType, months, amount, fio);
         LoanResponse response = controller.createRequest(this.request);
-        repository.writeResponse(response);
+        loanRequestResponse = new LoanRequestResponse(response, request);
+        repository.setLoanRequestResponseMap(response.getResponseId(), loanRequestResponse);
         assertEquals(expectedResponseType, repository.getStatus(response.getResponseId()));
     }
 
@@ -93,59 +94,5 @@ public class LoanCalcTest {
         final AmountValidationException thrown = assertThrows(AmountValidationException.class,
                 () -> controller.createRequest(new LoanRequest(LoanType.PERSON, 11, 0, "Петрова Ирина Михайловна")));
         assertEquals("Некорректное значение суммы!", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("Проверка возврата ошибки Пустые данные в запросе! при пустом реквесте")
-    public void shouldGetErrorNullRequest() {
-        controller = new LoanCalcController(new LoanCalcService(repository));
-        final NullPointerException thrown = assertThrows(NullPointerException.class,
-                () -> controller.createRequest(null));
-        assertEquals("Пустые данные в запросе!", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("Проверка возврата ошибки Некорректная длина FIO! при длине меньше 10")
-    public void shouldGetErrorWhenInvalidFio() {
-        controller = new LoanCalcController(new LoanCalcService(repository));
-        final FioDataLengthException thrown = assertThrows(FioDataLengthException.class,
-                () -> controller.createRequest(new LoanRequest(LoanType.PERSON, 11, 0, "Петро")));
-        assertEquals("Некорректная длина FIO!", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("Проверка возврата ошибки Некорректная длина FIO! при длине больше 100")
-    public void shouldGetErrorWhenInvalidFioLong() {
-        controller = new LoanCalcController(new LoanCalcService(repository));
-        final FioDataLengthException thrown = assertThrows(FioDataLengthException.class,
-                () -> controller.createRequest(new LoanRequest(LoanType.PERSON, 11, 0, "Петронн лавыавы лываваыв ывоаыоваоываоывавыаваываваывавыавыаываыва ваывавыаываваыв ывавыавыаывавы ыаввыавыаыв")));
-        assertEquals("Некорректная длина FIO!", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("Проверка возврата ошибки Некорректное значение суммы! при  сумме больше 999999.99")
-    public void shouldGetErrorWhenAmountRequestInvalid() {
-        controller = new LoanCalcController(new LoanCalcService(repository));
-        final AmountValidationException thrown = assertThrows(AmountValidationException.class,
-                () -> controller.createRequest(new LoanRequest(LoanType.PERSON, 11, 1000000, "Петрова Ирина Михайловна")));
-        assertEquals("Некорректное значение суммы!", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("Проверка возврата ошибки Некорректное значение месяца! при нулевом месяце")
-    public void shouldGetErrorWhenMonthsRequestInvalid() {
-        controller = new LoanCalcController(new LoanCalcService(repository));
-        final MonthsDataValidationException thrown = assertThrows(MonthsDataValidationException.class,
-                () -> controller.createRequest(new LoanRequest(LoanType.PERSON, 101, 1000, "Петрова Ирина Михайловна")));
-        assertEquals("Некорректное значение месяца!", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("Проверка возврата ошибки Пустые данные в запросе! при длине больше 100")
-    public void shouldGetErrorWhenInvalidFioNull() {
-        controller = new LoanCalcController(new LoanCalcService(repository));
-        final NullPointerException thrown = assertThrows(NullPointerException.class,
-                () -> controller.createRequest(new LoanRequest(LoanType.PERSON, 11, 0, null)));
-        assertEquals("Пустые данные в запросе!", thrown.getMessage());
     }
 }
