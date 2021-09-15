@@ -1,16 +1,9 @@
 package com.tinkoff.edu.app.repository;
 
-public class LoanCalcRepository {
-    private static int requestId;
+import com.tinkoff.edu.app.request.LoanRequest;
 
-    /**
-     * TODO persists request
-     *
-     * @return Request Id
-     */
-    public static int save() {
-        return ++requestId;
-    }
+import java.util.UUID;
+
+public interface LoanCalcRepository {
+    UUID save(LoanRequest request);
 }
-
-
